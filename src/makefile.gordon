@@ -1,0 +1,77 @@
+##### Specify where the code will be run #####
+
+
+######## Choose compilers and options ########
+
+
+F90         = mpif90
+CC          = mpicc -O3 -xHOST -fp-model strict -fp-speculation=off #-hipa5 
+OPTFLAGS2   = -O3 -xHOST -warn all -fp-model strict -fp-speculation=off  #-hcpu=interlagos -Oipa5 #-fast -O0 -Kieee -Msave -Mdaz -Mflushz -r4 -i4
+#LIBS        = -lmpi
+
+############## Define dependecies ############
+
+DEFAULT        = all
+
+
+OBJS_sp        =precision_sp.o
+OBJS_dp        =precision_dp.o
+OBJS        =   parameter_mod.o \
+                mesh_class.o \
+                mesh2d.o \
+                functions.o \
+                inject.o \
+                dipole_field.o \
+                dipole_field_2d.o \
+                wrtfile.o \
+                wrtfile_Non_MPIO.o \
+                3dHybrid.o \
+                get_environment_variable1.o \
+                get_environment_variable2.o \
+                integer_to_character.o \
+                field_2d.o \
+                etacal.o \
+                etacal_2d.o
+
+3dh.sp: $(OBJS_sp) $(OBJS)
+	@echo "linking..."
+	$(F90) $(OPTFLAGS2) -o 3dh.sp $(OBJS_sp) $(OBJS) $(LIBS) $(PSINS)
+
+3dh.dp: $(OBJS_dp) $(OBJS)
+	@echo "linking..."
+	$(F90) $(OPTFLAGS2) -o 3dh.dp $(OBJS_dp) $(OBJS) $(LIBS) $(PSINS)
+sp:
+	make clean
+	make 3dh.sp
+
+dp:
+	make clean
+	make 3dh.dp
+all:
+	make clean
+	make 3dh.dp
+	make clean
+	make 3dh.sp
+	
+
+############## Compile C files ###############
+
+get_environment_variable2.o: get_environment_variable2.c
+	$(CC)  -o get_environment_variable2.o -c get_environment_variable2.c
+
+get_environment_variable1.o: get_environment_variable1.c
+	$(CC)  -o get_environment_variable1.o -c get_environment_variable1.c
+
+integer_to_character.o: integer_to_character.c
+	$(CC)  -o integer_to_character.o -c integer_to_character.c
+
+############## Compile F90 files #############
+
+%.o: %.f90 makefile #parameter_mod_sp.f90
+	$(F90)  $(OPTFLAGS2) -o $@ -c $< 
+
+clean:
+	-rm  -f *.o  *.mod 
+cleanall:
+	-rm  restart_data.*
+   

@@ -1,0 +1,32 @@
+To make code for single precision:
+make sp
+
+To make code for double precision:
+make dp
+
+or "make all" to build both versions
+
+
+You need to "make clean" between different builds,
+ this is done automatically with the commands above.
+
+All precision controled in precision_XX.f90 where :
+XX = sp - single precision
+XX = dp - double precision
+
+Note that the flux routine is promoted to double precision
+even in the single precision build defining the CUSTOM_FLUX
+fortran kind as double precision.  You can use this kind
+variable to promote other variables and functions to 
+double precision even during the single precision build. 
+
+
+small experiment with compiler flags (cray):
+spresults/run1:  total time                   (s)          = 698.229309  "-O3"
+spresults/run2:  total time                   (s)          = 695.925781  "-O3 -cpu=interlagos"
+spresults/run3:  total time                   (s)          = 693.172302  "-O3 -cpu=interlagos -Oipa5"
+
+dpresults/run1:  total time                   (s)          = 777.94899754226208 "-O3"
+dpresults/run2:  total time                   (s)          = 781.62199641019106 "-O3 -cpu=interlagos"
+dpresults/run3:  total time                   (s)          = 787.00599775090814 "-O3 -cpu=interlagos -Oipa5"
+
