@@ -1,0 +1,52 @@
+&datum
+
+      MPI_IO_format = .false.
+      denmin=0.05,  resis=1.0e-04,  iterb=5,
+      wpiwci=6000.,
+      testorbt=.f., norbskip=1,
+      restrt_write = 1,
+      btspec=0.5,
+      bete=0.5,
+      fxsho=1.0,  nxcel=4,
+      ieta=2,etamin=5.0e-6,etamax=5.0e-5,
+      netax=10,  netay=2, netaz=5,
+      ave1 = 100.0, ave2 = 50.,
+      phib = 180.0, theta_max =  -90.,
+      nspec=1,
+      nx=512, xmax=512.,   ny=512, ymax=512.,   nz=1, zmax=1.,
+      npx=1024,   npy=1024,   npz=2,
+      xaa=0.,  xbb=512.   ,  nax=0  , nbx=512
+      yaa=0.,  ybb=512.   ,  nay=0  , nby=512
+      zaa=0. , zbb=1.   ,  naz=0  , nbz=1
+      n_subcycles=10
+      qspec=1.,    wspec=1.0,
+      nskipx=1,  nskipy=1,  nskipz=1,
+      bxc=0.,   byc=0.e-4,   bzc=0.0,
+      maximum_simulation_time = 100.00,  dtwci=0.002, nprint=1000, nwrtdata=200, nwrtrestart=100000
+      frac=1.0,
+      vxbar=5.,    vybar=0.0,   vzbar=0.0,
+      anisot=1.0, gama=1.66667,
+      Yee=.false.,
+      b_in_xy=.true.,
+      global=.true.,
+      i_dipole=256,
+      j_dipole=256,
+      k_dipole=1,
+      R_MP=5.,
+      R_obstacle_to_MP=0.58,
+      absorbing_dipole=.false.
+      bz_IMF=0.0,
+      eta_par=0
+      QUOTA=160.0,
+      buffer_zone = 0.,
+      moat_zone=3.
+      profile_power = 0
+      uniform_loading_in_logical_grid = .false.,
+      dipole_ramp_time=0.0,
+      image_dipole=.true.,
+      smoothing=.false.,
+      smooth_coef=0.
+      time_reverse_B=-8.
+      reverse_B_ramp_time=2.0,
+
+$

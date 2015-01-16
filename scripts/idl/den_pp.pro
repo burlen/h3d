@@ -1,0 +1,10 @@
+nx=256
+ny=256 
+den=fltarr(nx,ny)
+tmp=fltarr(nx,ny)
+openr,1,'data/2d_s/bx_300.gda'
+readu,1,tmp
+den(*,*)=tmp
+close,1
+plot,den(*,128)
+end

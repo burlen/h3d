@@ -1,0 +1,34 @@
+#include <math.h>
+void integer_to_character__(c,max_char,x)
+char c[1];
+int  *x,*max_char;
+{
+        int *remainder_current_pointer,y,remainder_pending,remainder_current,one_digit,counter,divisor,base;
+        char c_tmp[1024];
+        base=10;
+        counter=0;
+        remainder_current=*x;
+        remainder_current_pointer=&remainder_current;
+        if (remainder_current == 0) {
+                                     c[0]='0';
+                                     goto finished;
+                                     }
+        y=(int) log10((double) *remainder_current_pointer);
+        divisor=pow(base,(double) y);
+ again: {
+          remainder_current=*remainder_current_pointer;
+          remainder_pending= (int) fmod((double) remainder_current,(double) divisor);  
+          one_digit=48+(*remainder_current_pointer-remainder_pending)/divisor;
+          sprintf(c_tmp,"%c",one_digit); 
+          c[counter]=c_tmp[0];
+          remainder_current=remainder_pending;
+          counter++;
+          y=y-1;
+          divisor=divisor/10;
+         }
+         if (y > -1) goto again;  
+ finished: {
+        int i;
+        for (i=counter; i<=*max_char-1; ++i) c[i]=' ';
+           }
+}
