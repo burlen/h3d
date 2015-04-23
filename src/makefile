@@ -9,8 +9,8 @@ CC          = mpicc
 #OPTFLAGS2   = -O3
 #OPTFLAGS    = -fast -g -traceback
 #OPTFLAGS2   = -fast -g -traceback
-   OPTFLAGS    = -O3 -xHOST -check bounds
-   OPTFLAGS2   = -O3 -xHOST -check bounds
+   OPTFLAGS    = -g -ffree-form -ffree-line-length-none -finteger-4-integer-8
+   OPTFLAGS2   = -g -ffree-form -ffree-line-length-none -finteger-4-integer-8
    LIBS        = -lmpi
 
 ############## Define dependecies ############
@@ -53,4 +53,4 @@ clean:
 	-rm  *.mod  3dh *.of90 *.ogcc
 cleanall:
 	-rm  restart_data.*
-   
+
