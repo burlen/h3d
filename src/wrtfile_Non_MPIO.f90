@@ -19,6 +19,11 @@ subroutine wrtfile_Non_MPIO(dat,rnorm,filenum, irec_start,ny1m,nz1m)
 !
 !  begin by converting data to REAL*4
 !
+   print *, 'wrtfile_Non_MPIO: ', filenum
+   if (filenum > 1000) then
+      print *, 'large file num: ', filenum
+   endif
+
    do k = kb-1, ke+1
      do j = jb-1,je+1
        do i = 1, nxmax

@@ -19,7 +19,27 @@
       double precision, dimension(:,:,:), allocatable:: uniform_mesh,nonuniform_mesh_global
       character (len=240)::fileNameX
       integer:: iwrite
+      integer*8 file_unit_101
       external get_environment_variable
+!----------------------------------------------------------------------
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  Declaration
+!
+!----------------------------------------------------------------------
+      integer :: isrtx,   & ! Extent of the grid per processor
+                 iendx,   & !
+                 isrty,   & !
+                 iendy,   & !
+                 isrtz,   & !
+                 iendz
+      integer :: insitu_now ! Perform insitu for this timestep?
+!----------------------------------------------------------------------
+! end Declaration
+!----------------------------------------------------------------------
+
+
 !
 !***********************************************************************
 !
@@ -37,12 +57,15 @@
        ,profile_power,uniform_loading_in_logical_grid,moat_zone             &
        ,MPI_IO_format,dipole_ramp_time,image_dipole,smoothing               &
        ,time_reverse_B,reverse_B_ramp_time,smooth_coef,post_process         &
-       ,xbox_l,xbox_r,ybox_l,ybox_r,zbox_l,zbox_r,t_begin,t_end,nwrtparticle
+       ,xbox_l,xbox_r,ybox_l,ybox_r,zbox_l,zbox_r,t_begin,t_end,nwrtparticle &
+       ,insitu
 
-        time_elapsed=0.;time_begin_array=0;time_end_array=0
-        buffer_zone=0.
-        notime=1
-        bxc=0.;byc=0.;bzc=0.
+       parameter(file_unit_101 = 101)
+       time_elapsed=0.;time_begin_array=0;time_end_array=0
+       buffer_zone=0.
+       notime=1
+       bxc=0.;byc=0.;bzc=0.
+       insitu = .true.
 !
 !***********************************************************************
 !
@@ -218,6 +241,36 @@
       call MPI_BCAST(t_begin                ,1     ,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,IERR)
       call MPI_BCAST(t_end                  ,1     ,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,IERR)
       call MPI_BCAST(nwrtparticle           ,1     ,MPI_INTEGER8        ,0,MPI_COMM_WORLD,IERR)
+!----------------------------------------------------------------------
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  Broadcast insitu logical
+!
+!----------------------------------------------------------------------
+      call MPI_BCAST(insitu,1,MPI_LOGICAL,0,MPI_COMM_WORLD,IERR)
+!----------------------------------------------------------------------
+! end Broadcast
+!----------------------------------------------------------------------
+!----------------------------------------------------------------------
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  Initialize
+!
+!    coprocessorinitializewithpython(python insitu script filename,
+!                                    length of python insitu script filename)
+!
+!----------------------------------------------------------------------
+      if (insitu) then
+         call coprocessorinitializewithpython("insitu.py", 9)
+      endif
+!----------------------------------------------------------------------
+! end Initialize
+!----------------------------------------------------------------------
+!
+!
+
 !
 ! 
       theta = theta_max
@@ -338,6 +391,30 @@
          endif
       enddo
 
+
+!----------------------------------------------------------------------
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  CreateVTKUniformGrid - At this point we can define the uniform grid
+!
+!    for 2D - x-dim is unchanged and y-dim is decomposed
+!    for 3D - x-dim is unchanged and both y-dim and z-dim are 
+!             decomposed
+!
+!----------------------------------------------------------------------
+      if (insitu) then
+         isrtx = -1
+         iendx = nx
+         isrty = jb-2
+         iendy = jb+nylmax-1
+         isrtz = kb-2
+         iendz = kb+nzlmax-1
+         call createvtkuniformgrid(isrtx,iendx,isrty,iendy,isrtz,iendz)
+      endif
+!----------------------------------------------------------------------
+! end CreateVTKUniformGrid
+!----------------------------------------------------------------------
 
 !  Use CART_SHIFT to determine processor to immediate left
 ! (NBRLEFT) and right (NBRRITE) of processor MYID
@@ -783,11 +860,11 @@
         else
           irecnum = 1
           lenrec=(nxmax-2)*recl_for_real
-          open (101,                                                                                  &
+          open (file_unit_101,                                                                                  &
                 file= trim(adjustl(data_directory))//'bx_dipole.gda', &
                 form='unformatted',                                                                   &
                 action='write',access='direct', status='unknown',recl=lenrec)
-          call wrtfile_NON_MPIO(uniform_mesh,rnorm,101,irecnum,ny,nz)
+          call wrtfile_NON_MPIO(uniform_mesh,rnorm,file_unit_101,irecnum,ny,nz)
         endif
         rnorm = wpiwci
 !        call MESH_INTERPOLATED_3D(bdipole_y,uniform_mesh,nonuniform_mesh_global)
@@ -796,11 +873,11 @@
 	  fileNameX = trim(adjustl(data_directory))//'by_dipole.gda'
           call wrtfile         (uniform_mesh,rnorm,fileNameX,irecnum,ny,nz)
         else
-          open (101,                                                                                  &
+          open (file_unit_101,                                                                                  &
                 file= trim(adjustl(data_directory))//'by_dipole.gda', &
                 form='unformatted',                                                                   &
                 action='write',access='direct', status='unknown',recl=lenrec)
-          call wrtfile_NON_MPIO(uniform_mesh,rnorm,101,irecnum,ny,nz)
+          call wrtfile_NON_MPIO(uniform_mesh,rnorm,file_unit_101,irecnum,ny,nz)
         endif
         rnorm = wpiwci
 !        call MESH_INTERPOLATED_3D(bdipole_z,uniform_mesh,nonuniform_mesh_global)
@@ -809,11 +886,11 @@
 	  fileNameX = trim(adjustl(data_directory))//'bz_dipole.gda'
           call wrtfile         (uniform_mesh,rnorm,fileNameX,irecnum,ny,nz)
         else
-          open (101,                                                                                  &
+          open (file_unit_101,                                                                                  &
                 file= trim(adjustl(data_directory))//'bz_dipole.gda', &
                 form='unformatted',                                                                   &
                 action='write',access='direct', status='unknown',recl=lenrec)
-          call wrtfile_NON_MPIO(uniform_mesh,rnorm,101,irecnum,ny,nz)
+          call wrtfile_NON_MPIO(uniform_mesh,rnorm,file_unit_101,irecnum,ny,nz)
         endif
 
       call date_and_time(values=time_end)
@@ -1060,8 +1137,10 @@
           call MPI_BCAST(cycle_ascii,160,MPI_CHARACTER,0,MPI_COMM_WORLD,IERR)
           call MPI_BCAST(cycle_ascii_new,160,MPI_CHARACTER,0,MPI_COMM_WORLD,IERR)
 
-         if (myid == 0 .and. .not. MPI_IO_format) call openfiles
-
+         if (myid == 0 .and. .not. MPI_IO_format) then
+            call openfiles
+         endif
+         
           call date_and_time(values=time_begin_array(:,6))
           if (ndim /= 1) then
             call caltemp2_global
@@ -1083,6 +1162,28 @@
              close(file_unit(j))
            enddo
          endif
+!----------------------------------------------------------------------
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  CoProcessing - At this point we coprocess
+!
+!----------------------------------------------------------------------
+      if (insitu) then
+!        if (mod(it,11).eq.0) then
+         my_short_int=it
+         call requestdatadescription(my_short_int-1,                  &
+                                     DBLE(my_short_int-1),insitu_now)
+         call addscalars(bx,by,bz,den,ex,ey,ez,vix,viy,viz,tpar,      &
+                         tperp,eta,nxmax,nylmax,nzlmax,               &
+                         kb,ke,jb,je,nspecm)
+         call coprocess() 
+!        endif
+      endif
+!----------------------------------------------------------------------
+! end CoProcessing
+!----------------------------------------------------------------------
+
 !
 !=======================================================================
 !
@@ -1295,9 +1396,83 @@
 !
 !=======================================================================
 !
+!----------------------------------------------------------------------
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  Finalize
+!
+!----------------------------------------------------------------------
+      call coprocessorfinalize()
+!----------------------------------------------------------------------
+! end Finalize
+!----------------------------------------------------------------------
+!
       call MPI_FINALIZE(IERR)
       stop
       end
+
+!***********************************************************************
+!
+      subroutine addscalars(bx,by,bz,den,ex,ey,ez,vix,viy,viz,tpar,   &
+                            tperp,eta,nxmax,nylmax,nzlmax,            &
+                            kb,ke,jb,je,nspecm)
+!======================================================================
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  addscalars - adding raw scalars to insitu pipeline.
+!
+!======================================================================
+      implicit none
+      integer*8 nxmax,nylmax,nzlmax,kb,ke,jb,je,nspecm
+      double precision, dimension(nxmax,jb-1:je+1,kb-1:ke+1) :: &
+          bx,by,bz,den,ex,ey,ez,vix,viy,viz,eta
+      double precision,                                         &
+          dimension(nxmax,jb-1:je+1,kb-1:ke+1,nspecm) ::              &
+          tpar,tperp
+!----------------------------------------------------------------------
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  AddScalars - At this point we add raw scalars, otherwise we would 
+!               have create new memory for the REAL*4, and scale by
+!               other scalars and a real*4 normalizer.
+!
+!----------------------------------------------------------------------
+        call adduniformgridscalar('bx',2,bx,                          &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('by',2,by,                          &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('bz',2,bz,                          &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('den',3,den,                        &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('ex',2,ex,                          &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('ey',2,ey,                          &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('ez',2,ez,                          &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('vix',3,vix,                        &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('viy',3,viy,                        &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('viz',3,viz,                        &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('tpar',4,tpar(:,:,:,1),             &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('tperp',5,tperp(:,:,:,1),           &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+        call adduniformgridscalar('eta',3,eta,                        &
+                                  nxmax*(nylmax+2)*(nzlmax+2))
+!----------------------------------------------------------------------
+! end AddScalars
+!----------------------------------------------------------------------
+        return
+      end subroutine addscalars
+
+
 !
 !***********************************************************************
 !
@@ -1571,6 +1746,7 @@
         file_unit_ref = 250
         do j=1,20
   	  file_unit(j) = file_unit_ref + j
+          print *, 'openfiles: ', file_unit(j)
         enddo
         open (file_unit(1),                                                                         &
 !              file= 'bx_'//trim(adjustl(cycle_ascii))//'.gda', &
@@ -4829,7 +5005,7 @@
  
       if (idum < 0.or.iff == 0)then
         iff=1
-        mj=MSEED-iabs(idum)
+        mj=MSEED-iabs(int(idum,4))
         mj=mod(mj,MBIG)
         ma(55)=mj
         mk=1

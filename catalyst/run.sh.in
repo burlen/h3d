@@ -1,5 +1,6 @@
 #!/bin/bash
-WORKDIR=/home/utkarsh/Kitware/ParaView3/Sensei/h3d/src
+WORKDIR=@CMAKE_BINARY_DIR@/../src
+PARAVIEW_BUILD_DIR=@ParaView_DIR@
 
 export DATA_DIRECTORY=$WORKDIR/data
 export RESTART_DIRECTORY=$WORKDIR/restart_files
@@ -9,12 +10,14 @@ export SOURCE_DIRECTORY=$WORKDIR
 mkdir -p $DATA_DIRECTORY
 mkdir -p $RESTART_DIRECTORY
 
-cd $WORKDIR
 cp $INPUT_DIRECTORY/finput.small.dat $DATA_DIRECTORY/finput.dat
-#cp ${HOME}/.cleanup_status_init $DATA_DIRECTORY/.cleanup_status_init
-touch $DATA_DIRECTORY/.cleanup_status_init
+echo "CLEANUP_STATUS=FALSE" > $DATA_DIRECTORY/.cleanup_status
 
 export MPI_TYPE_MAX=65536
 export MPI_REQUEST_MAX=65536
 
-mpiexec -np 16 ./3dh > 3dhout
+cd @CMAKE_BINARY_DIR@
+LD_LIBRARY_PATH=$PARAVIEW_BUILD_DIR/lib mpiexec -np 16 $WORKDIR/3dh > 3dhout.log 2>&1
+
+#used for debugging
+#LD_LIBRARY_PATH=$PARAVIEW_BUILD_DIR/lib mpiexec -np 1 xterm -e gdb --args ./3dh

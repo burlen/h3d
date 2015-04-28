@@ -1,3 +1,6 @@
+# Where to find ParaView Catalyst Libraries
+PARAVIEW_BUILD_DIR = /home/danlipsa/build/ParaView-ensight-crash
+
 ##### Specify where the code will be run #####
 
 
@@ -5,13 +8,11 @@
 
 F90         = mpif90
 CC          = mpicc
-#OPTFLAGS    = -O3 
-#OPTFLAGS2   = -O3
-#OPTFLAGS    = -fast -g -traceback
-#OPTFLAGS2   = -fast -g -traceback
-OPTFLAGS    = -O3 -ffree-form -ffree-line-length-none -finteger-4-integer-8
-OPTFLAGS2   = -O3 -ffree-form -ffree-line-length-none -finteger-4-integer-8
-LIBS        = -lmpi
+OPTFLAGS    = -O3 -ffree-form -ffree-line-length-none
+OPTFLAGS2   = -O3 -ffree-form -ffree-line-length-none
+LIBS        = -lmpi -lUH3DAdaptor -lstdc++
+VTKLIBS     = -lvtkPVCatalyst-pv4.3 -lvtkPVPythonCatalyst-pv4.3 -lvtkPVServerManagerApplication-pv4.3 -lvtkPVServerManagerCore-pv4.3 -lvtkPVServerImplementationCore-pv4.3 -lvtkPVClientServerCoreCore-pv4.3 -lvtkFiltersParallel-pv4.3 -lvtkFiltersModeling-pv4.3 -lvtkRenderingCore-pv4.3 -lvtkFiltersExtraction-pv4.3 -lvtkFiltersStatistics-pv4.3 -lvtkImagingFourier-pv4.3 -lvtkImagingCore-pv4.3 -lvtkFiltersGeometry-pv4.3 -lvtkFiltersSources-pv4.3 -lvtkFiltersGeneral-pv4.3 -lvtkCommonComputationalGeometry-pv4.3 -lvtkCommonColor-pv4.3 -lvtkFiltersProgrammable-pv4.3 -lvtkPVVTKExtensionsCore-pv4.3 -lvtkPVCommon-pv4.3 -lvtkClientServer-pv4.3 -lvtkIOXMLParser-pv4.3 -lvtkFiltersCore-pv4.3 -lvtkParallelMPI-pv4.3 -lvtkParallelCore-pv4.3 -lvtkIOLegacy-pv4.3 -lvtkIOCore-pv4.3 -lvtkCommonExecutionModel-pv4.3 -lvtkCommonDataModel-pv4.3 -lvtkCommonSystem-pv4.3 -lvtkCommonTransforms-pv4.3 -lvtkCommonMisc-pv4.3 -lvtkCommonMath-pv4.3 -lvtkPythonInterpreter-pv4.3 -lvtkWrappingPython27Core-pv4.3 -lvtkCommonCore-pv4.3 -lvtksys-pv4.3
+LIBFLAGS    = -L../catalyst-build/ -L$(PARAVIEW_BUILD_DIR)/lib
 
 ############## Define dependecies ############
 
@@ -34,7 +35,7 @@ OBJS         =  parameter_mod.of90 \
 		etacal_2d.of90
 $(EFILE): $(OBJS)
 	@echo "linking..."
-	$(F90) $(OPTFLAGS2) -o $(EFILE) $(OBJS) $(LIBS)
+	$(F90) $(OPTFLAGS2) -o $(EFILE) $(OBJS) $(LIBFLAGS) $(LIBS) $(VTKLIBS)
 
 ############## Compile C files ###############
 

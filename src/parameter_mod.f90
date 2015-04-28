@@ -92,6 +92,19 @@
       character(len=2):: restart_index_suffix(2)
       character(len=160):: data_directory,cycle_ascii_new,myid_char,restart_directory
       character(len=160):: cycle_ascii,cleanup_status
+!----------------------------------------------------------------------
+!
+! insitu Patrick O'Leary 2/21/2013
+!
+!  Declaration
+!----------------------------------------------------------------------
+      logical :: insitu
+!----------------------------------------------------------------------
+! end Declaration
+!----------------------------------------------------------------------
+!
+!
+
 !
 !
       contains
