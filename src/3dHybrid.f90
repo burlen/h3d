@@ -1174,9 +1174,9 @@
          my_short_int=it
          call requestdatadescription(my_short_int-1,                  &
                                      DBLE(my_short_int-1),insitu_now)
-         call addscalars(bx,by,bz,den,ex,ey,ez,vix,viy,viz,tpar,      &
-                         tperp,eta,nxmax,nylmax,nzlmax,               &
-                         kb,ke,jb,je,nspecm)
+         call addattributes(bx,by,bz,den,ex,ey,ez,vix,viy,viz,tpar,      &
+                            tperp,eta,nxmax,nylmax,nzlmax,               &
+                            kb,ke,jb,je,nspecm)
          call coprocess() 
 !        endif
       endif
@@ -1414,14 +1414,14 @@
 
 !***********************************************************************
 !
-      subroutine addscalars(bx,by,bz,den,ex,ey,ez,vix,viy,viz,tpar,   &
-                            tperp,eta,nxmax,nylmax,nzlmax,            &
-                            kb,ke,jb,je,nspecm)
+      subroutine addattributes(bx,by,bz,den,ex,ey,ez,vix,viy,viz,tpar,   &
+                               tperp,eta,nxmax,nylmax,nzlmax,            &
+                               kb,ke,jb,je,nspecm)
 !======================================================================
 !
 ! insitu Patrick O'Leary 2/21/2013
 !
-!  addscalars - adding raw scalars to insitu pipeline.
+!  addattributes - adding raw scalars and vectors to insitu pipeline.
 !
 !======================================================================
       implicit none
@@ -1435,30 +1435,18 @@
 !
 ! insitu Patrick O'Leary 2/21/2013
 !
-!  AddScalars - At this point we add raw scalars, otherwise we would 
+!  AddAttributes - At this point we add raw scalars, otherwise we would 
 !               have create new memory for the REAL*4, and scale by
 !               other scalars and a real*4 normalizer.
 !
 !----------------------------------------------------------------------
-        call adduniformgridscalar('bx',2,bx,                          &
-                                  nxmax*(nylmax+2)*(nzlmax+2))
-        call adduniformgridscalar('by',2,by,                          &
-                                  nxmax*(nylmax+2)*(nzlmax+2))
-        call adduniformgridscalar('bz',2,bz,                          &
+        call adduniformgridvector('b',1,bx,by,bz,                     &
                                   nxmax*(nylmax+2)*(nzlmax+2))
         call adduniformgridscalar('den',3,den,                        &
                                   nxmax*(nylmax+2)*(nzlmax+2))
-        call adduniformgridscalar('ex',2,ex,                          &
+        call adduniformgridvector('e',1,ex,ey,ez,                     &
                                   nxmax*(nylmax+2)*(nzlmax+2))
-        call adduniformgridscalar('ey',2,ey,                          &
-                                  nxmax*(nylmax+2)*(nzlmax+2))
-        call adduniformgridscalar('ez',2,ez,                          &
-                                  nxmax*(nylmax+2)*(nzlmax+2))
-        call adduniformgridscalar('vix',3,vix,                        &
-                                  nxmax*(nylmax+2)*(nzlmax+2))
-        call adduniformgridscalar('viy',3,viy,                        &
-                                  nxmax*(nylmax+2)*(nzlmax+2))
-        call adduniformgridscalar('viz',3,viz,                        &
+        call adduniformgridvector('vi',2,vix,viy,viz,                 &
                                   nxmax*(nylmax+2)*(nzlmax+2))
         call adduniformgridscalar('tpar',4,tpar(:,:,:,1),             &
                                   nxmax*(nylmax+2)*(nzlmax+2))
@@ -1467,10 +1455,10 @@
         call adduniformgridscalar('eta',3,eta,                        &
                                   nxmax*(nylmax+2)*(nzlmax+2))
 !----------------------------------------------------------------------
-! end AddScalars
+! end AddAttributes
 !----------------------------------------------------------------------
         return
-      end subroutine addscalars
+      end subroutine addattributes
 
 
 !
@@ -1746,7 +1734,6 @@
         file_unit_ref = 250
         do j=1,20
   	  file_unit(j) = file_unit_ref + j
-          print *, 'openfiles: ', file_unit(j)
         enddo
         open (file_unit(1),                                                                         &
 !              file= 'bx_'//trim(adjustl(cycle_ascii))//'.gda', &

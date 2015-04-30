@@ -10,14 +10,18 @@ export SOURCE_DIRECTORY=$WORKDIR
 mkdir -p $DATA_DIRECTORY
 mkdir -p $RESTART_DIRECTORY
 
-cp $INPUT_DIRECTORY/finput.small.dat $DATA_DIRECTORY/finput.dat
+#cp $INPUT_DIRECTORY/finput.small.dat $DATA_DIRECTORY/finput.dat
+cp $INPUT_DIRECTORY/finput.ssmall.dat $DATA_DIRECTORY/finput.dat
+
 echo "CLEANUP_STATUS=FALSE" > $DATA_DIRECTORY/.cleanup_status
 
 export MPI_TYPE_MAX=65536
 export MPI_REQUEST_MAX=65536
 
 cd @CMAKE_BINARY_DIR@
-LD_LIBRARY_PATH=$PARAVIEW_BUILD_DIR/lib mpiexec -np 16 $WORKDIR/3dh > 3dhout.log 2>&1
+rm -f den_*.png
+#LD_LIBRARY_PATH=$PARAVIEW_BUILD_DIR/lib mpiexec -np 16 $WORKDIR/3dh > 3dhout.log 2>&1
+LD_LIBRARY_PATH=$PARAVIEW_BUILD_DIR/lib mpiexec -np 4 $WORKDIR/3dh > 3dhout.log 2>&1
 
 #used for debugging
 #LD_LIBRARY_PATH=$PARAVIEW_BUILD_DIR/lib mpiexec -np 1 xterm -e gdb --args ./3dh
