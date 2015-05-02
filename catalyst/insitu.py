@@ -29,7 +29,7 @@ def CreateCoProcessor():
       renderView1.StereoType = 0
       renderView1.CameraPosition = [-2.03446004499998, 3.7509065435536666, -76.0123093466646]
       renderView1.CameraFocalPoint = [15.500000000000009, 0.4999999999999981, -3.703117506228924e-15]
-      renderView1.CameraViewUp = [0.21043060672077907, -0.9734410943388376, -0.09017425135553452]
+      renderView1.CameraViewUp = [0.013451601339380045, 0.9436796555336437, -0.33058699634636274]
       renderView1.CameraParallelScale = 20.442252632172327
       renderView1.Background = [0.32, 0.34, 0.43]
 
@@ -64,6 +64,16 @@ def CreateCoProcessor():
       calculator3.Function = 'vix*iHat + viy*jHat + viz*kHat'
 
       h3dData = calculator3
+
+
+      # create a new 'Parallel Image Data Writer'
+      parallelImageDataWriter1 = servermanager.writers.XMLPImageDataWriter(Input=h3dData)
+
+      # register the writer with coprocessor
+      # and provide it with information such as the filename to use,
+      # how frequently to write the data, etc.
+      coprocessor.RegisterWriter(parallelImageDataWriter1, filename='h3d_%t.pvti', freq=1)
+
 
       # ----------------------------------------------------------------
       # setup color maps and opacity mapes used in the visualization

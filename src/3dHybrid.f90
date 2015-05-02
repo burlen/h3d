@@ -33,7 +33,13 @@
                  isrty,   & !
                  iendy,   & !
                  isrtz,   & !
-                 iendz
+                 iendz,   & !
+                 wholeExtentStartX, & ! Extent of the whole grid
+                 wholeExtentEndX,   & !
+                 wholeExtentStartY, & !
+                 wholeExtentEndY,   & !
+                 wholeExtentStartZ, & !
+                 wholeExtentEndZ      !
       integer :: insitu_now ! Perform insitu for this timestep?
 !----------------------------------------------------------------------
 ! end Declaration
@@ -410,7 +416,16 @@
          iendy = jb+nylmax-1
          isrtz = kb-2
          iendz = kb+nzlmax-1
-         call createvtkuniformgrid(isrtx,iendx,isrty,iendy,isrtz,iendz)
+         wholeExtentStartX = -1
+         wholeExtentEndX = nx
+         wholeExtentStartY = -1
+         wholeExtentEndY = ny
+         wholeExtentStartZ = -1
+         wholeExtentEndZ = nz
+         call createvtkuniformgrid(isrtx,iendx,isrty,iendy,isrtz,iendz, &
+                                   wholeExtentStartX, wholeExtentEndX,  &
+                                   wholeExtentStartY, wholeExtentEndY,  &
+                                   wholeExtentStartZ, wholeExtentEndZ)
       endif
 !----------------------------------------------------------------------
 ! end CreateVTKUniformGrid

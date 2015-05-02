@@ -13,11 +13,11 @@
       ave1 = 100.0, ave2 = 50.,
       phib = 180.0, theta_max =  -90.,
       nspec=1,
-      nx=32, xmax=32.,   ny=32, ymax=32.,   nz=1, zmax=1.,
-      npx=1024,   npy=1024,   npz=2,
+      nx=32, xmax=32.,   ny=32, ymax=32.,   nz=32, zmax=32.,
+      npx=320,   npy=320,   npz=320,
       xaa=0.,  xbb=32.   ,  nax=0  , nbx=32
       yaa=0.,  ybb=32.   ,  nay=0  , nby=32
-      zaa=0. , zbb=1.   ,  naz=0  , nbz=1
+      zaa=0. , zbb=32.   ,  naz=0  , nbz=32
       n_subcycles=10
       qspec=1.,    wspec=1.0,
       nskipx=1,  nskipy=1,  nskipz=1,
@@ -31,7 +31,7 @@
       global=.true.,
       i_dipole=16,
       j_dipole=16,
-      k_dipole=1,
+      k_dipole=16,
       R_MP=5.,
       R_obstacle_to_MP=0.58,
       absorbing_dipole=.false.

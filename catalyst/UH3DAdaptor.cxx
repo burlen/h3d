@@ -28,7 +28,10 @@
 
 extern "C"
 void createvtkuniformgrid_(
-  int * istrx,int * iendx,int *jstry,int *jendy,int *kstrz,int *kendz)
+  int * startx,int * endx, int *starty,int *endy, int *startz,int *endz,
+  int* wholeExtentStartX, int* wholeExtentEndX, 
+  int* wholeExtentStartY, int* wholeExtentEndY,
+  int* wholeExtentStartZ, int* wholeExtentEndZ)
 {
   if(!vtkCPPythonAdaptorAPI::GetCoProcessorData())
     {
@@ -40,10 +43,16 @@ void createvtkuniformgrid_(
   img->Initialize();
 
   img->SetSpacing(1.0,1.0, 1.0);
-  img->SetExtent(*istrx,*iendx,*jstry,*jendy,*kstrz,*kendz);
+  img->SetExtent(*startx,*endx,*starty,*endy,*startz,*endz);
   img->SetOrigin(0.0, 0.0, 0.0);
 
-  vtkCPPythonAdaptorAPI::GetCoProcessorData()->GetInputDescriptionByName("input")->SetGrid(img);
+  vtkCPInputDataDescription* dataDescription = 
+    vtkCPPythonAdaptorAPI::GetCoProcessorData()->GetInputDescriptionByName(
+      "input");
+  dataDescription->SetGrid(img);
+  dataDescription->SetWholeExtent(*wholeExtentStartX, *wholeExtentEndX,
+                                  *wholeExtentStartY, *wholeExtentEndY,
+                                  *wholeExtentStartZ, *wholeExtentEndZ);
   img->Delete();
 }
 
