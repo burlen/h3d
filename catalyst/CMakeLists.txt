@@ -14,7 +14,7 @@ endif()
 configure_file(run.sh.in run.sh)
 
 include_directories(${UH3DAdaptor_BINARY_DIR})
-configure_file(insitu.py insitu.py COPYONLY)
+configure_file(insitu-4views.py insitu.py COPYONLY)
 
 set(UH3DAdaptor_SRCS
   UH3DAdaptor.cxx

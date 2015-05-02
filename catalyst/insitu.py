@@ -6,7 +6,7 @@ from paraview import coprocessing
 #--------------------------------------------------------------
 # Code generated from cpstate.py to create the CoProcessor.
 # ParaView 4.3.1-447-g2592378 64 bits
-
+# Saves the generated data as VTK pvti files
 
 # ----------------------- CoProcessor definition -----------------------
 
@@ -45,11 +45,11 @@ def CreateCoProcessor():
 
       # create a new 'H3d'
       # create a producer from a simulation input
-      h3dRawData = coprocessor.CreateProducer(datadescription, 'input')
+      h3d_ = coprocessor.CreateProducer(datadescription, 'input')
 
       # convert b, e, vi to vectors
       # create a new 'Calculator'
-      calculator1 = Calculator(Input=h3dRawData)
+      calculator1 = Calculator(Input=h3d_)
       calculator1.ResultArrayName = 'b'
       calculator1.Function = 'bx*iHat + by*jHat + bz*kHat'
 
@@ -63,11 +63,11 @@ def CreateCoProcessor():
       calculator3.ResultArrayName = 'vi'
       calculator3.Function = 'vix*iHat + viy*jHat + viz*kHat'
 
-      h3dData = calculator3
+      h3d = calculator3
 
 
       # create a new 'Parallel Image Data Writer'
-      parallelImageDataWriter1 = servermanager.writers.XMLPImageDataWriter(Input=h3dData)
+      parallelImageDataWriter1 = servermanager.writers.XMLPImageDataWriter(Input=h3d)
 
       # register the writer with coprocessor
       # and provide it with information such as the filename to use,
@@ -98,7 +98,7 @@ def CreateCoProcessor():
       # ----------------------------------------------------------------
 
       # show data from h3d
-      h3dDisplay = Show(h3dData, renderView1)
+      h3dDisplay = Show(h3d, renderView1)
       # trace defaults for the display properties.
       h3dDisplay.ColorArrayName = ['POINTS', 'den']
       h3dDisplay.SetRepresentationType('Surface With Edges')
