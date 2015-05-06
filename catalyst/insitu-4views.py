@@ -23,27 +23,27 @@ def CreateCoProcessor():
       #### disable automatic camera reset on 'Show'
       paraview.simple._DisableFirstRenderCameraReset()
 
-      # Create a new 'Render View'
-      renderView1 = CreateView('RenderView')
-      renderView1.ViewSize = [483, 387]
-      renderView1.AxesGrid = 'GridAxes3DActor'
-      renderView1.CenterOfRotation = [15.5, 15.5, 15.5]
-      renderView1.StereoType = 0
-      renderView1.CameraPosition = [-13.26567916460982, 59.02220746110771, 112.81887354587771]
-      renderView1.CameraFocalPoint = [15.5, 15.5, 15.5]
-      renderView1.CameraViewUp = [0.11789779112572521, 0.9190266663639157, -0.3761516946122972]
-      renderView1.CameraParallelScale = 28.578838324886476
-      renderView1.Background = [0.32, 0.34, 0.43]
+      # # Create a new 'Render View'
+      # renderView1 = CreateView('RenderView')
+      # renderView1.ViewSize = [483, 387]
+      # renderView1.AxesGrid = 'GridAxes3DActor'
+      # renderView1.CenterOfRotation = [15.5, 15.5, 15.5]
+      # renderView1.StereoType = 0
+      # renderView1.CameraPosition = [-13.26567916460982, 59.02220746110771, 112.81887354587771]
+      # renderView1.CameraFocalPoint = [15.5, 15.5, 15.5]
+      # renderView1.CameraViewUp = [0.11789779112572521, 0.9190266663639157, -0.3761516946122972]
+      # renderView1.CameraParallelScale = 28.578838324886476
+      # renderView1.Background = [0.32, 0.34, 0.43]
 
-      # init the 'GridAxes3DActor' selected for 'AxesGrid'
-      renderView1.AxesGrid.Visibility = 1
-      renderView1.AxesGrid.AxesToLabel = 47
+      # # init the 'GridAxes3DActor' selected for 'AxesGrid'
+      # renderView1.AxesGrid.Visibility = 1
+      # renderView1.AxesGrid.AxesToLabel = 47
 
-      # register the view with coprocessor
-      # and provide it with information such as the filename to use,
-      # how frequently to write the images, etc.
-      coprocessor.RegisterView(renderView1,
-          filename='volume_%t.png', freq=1, fittoscreen=0, magnification=1, width=483, height=387, cinema={})
+      # # register the view with coprocessor
+      # # and provide it with information such as the filename to use,
+      # # how frequently to write the images, etc.
+      # coprocessor.RegisterView(renderView1,
+      #     filename='volume_%t.png', freq=1, fittoscreen=0, magnification=1, width=483, height=387, cinema={})
 
       # Create a new 'Render View'
       renderView2 = CreateView('RenderView')
@@ -218,46 +218,46 @@ def CreateCoProcessor():
       denPWF.Points = [0.04999999999999998, 0.0, 0.5, 0.0, 4.01194270827862, 0.1184210553765297, 0.5, 0.0, 9.0, 1.0, 0.5, 0.0]
       denPWF.ScalarRangeInitialized = 1
 
-      # ----------------------------------------------------------------
-      # setup the visualization in view 'renderView1'
-      # ----------------------------------------------------------------
+      # # ----------------------------------------------------------------
+      # # setup the visualization in view 'renderView1'
+      # # ----------------------------------------------------------------
 
-      # show data from h3d
-      h3dDisplay = Show(h3d, renderView1)
-      # trace defaults for the display properties.
-      h3dDisplay.Representation = 'Volume'
-      h3dDisplay.ColorArrayName = ['POINTS', 'den']
-      h3dDisplay.LookupTable = denLUT
-      h3dDisplay.ScalarOpacityFunction = denPWF
-      h3dDisplay.ScalarOpacityUnitDistance = 1.7320508075688776
-      h3dDisplay.Slice = 16
+      # # show data from h3d
+      # h3dDisplay = Show(h3d, renderView1)
+      # # trace defaults for the display properties.
+      # h3dDisplay.Representation = 'Volume'
+      # h3dDisplay.ColorArrayName = ['POINTS', 'den']
+      # h3dDisplay.LookupTable = denLUT
+      # h3dDisplay.ScalarOpacityFunction = denPWF
+      # h3dDisplay.ScalarOpacityUnitDistance = 1.7320508075688776
+      # h3dDisplay.Slice = 16
 
-      # show color legend
-      h3dDisplay.SetScalarBarVisibility(renderView1, True)
+      # # show color legend
+      # h3dDisplay.SetScalarBarVisibility(renderView1, True)
 
-      # show data from text2
-      text2Display = Show(text2, renderView1)
-      # trace defaults for the display properties.
-      text2Display.Position = [0.2139, 0.9]
+      # # show data from text2
+      # text2Display = Show(text2, renderView1)
+      # # trace defaults for the display properties.
+      # text2Display.Position = [0.2139, 0.9]
 
-      # show data from annotateTime2
-      annotateTime2Display = Show(annotateTime2, renderView1)
-      # trace defaults for the display properties.
-      annotateTime2Display.Position = [0.321784, 0.9]
+      # # show data from annotateTime2
+      # annotateTime2Display = Show(annotateTime2, renderView1)
+      # # trace defaults for the display properties.
+      # annotateTime2Display.Position = [0.321784, 0.9]
 
-      # setup the color legend parameters for each legend in this view
+      # # setup the color legend parameters for each legend in this view
 
-      # get color legend/bar for denLUT in view renderView1
-      denLUTColorBar = GetScalarBar(denLUT, renderView1)
-      denLUTColorBar.Position = [0.9036099585062238, 0.04145077720207259]
-      denLUTColorBar.Position2 = [0.12000000000000033, 0.4299999999999997]
-      denLUTColorBar.Title = 'den'
-      denLUTColorBar.ComponentTitle = ''
-      denLUTColorBar.TitleFontSize = 10
-      denLUTColorBar.LabelFontSize = 10
-      denLUTColorBar.AutomaticLabelFormat = 0
-      denLUTColorBar.LabelFormat = '%-6.1g'
-      denLUTColorBar.RangeLabelFormat = '%-4.3g'
+      # # get color legend/bar for denLUT in view renderView1
+      # denLUTColorBar = GetScalarBar(denLUT, renderView1)
+      # denLUTColorBar.Position = [0.9036099585062238, 0.04145077720207259]
+      # denLUTColorBar.Position2 = [0.12000000000000033, 0.4299999999999997]
+      # denLUTColorBar.Title = 'den'
+      # denLUTColorBar.ComponentTitle = ''
+      # denLUTColorBar.TitleFontSize = 10
+      # denLUTColorBar.LabelFontSize = 10
+      # denLUTColorBar.AutomaticLabelFormat = 0
+      # denLUTColorBar.LabelFormat = '%-6.1g'
+      # denLUTColorBar.RangeLabelFormat = '%-4.3g'
 
       # ----------------------------------------------------------------
       # setup the visualization in view 'renderView2'
@@ -395,7 +395,7 @@ def CreateCoProcessor():
 
   coprocessor = CoProcessor()
   # these are the frequencies at which the coprocessor updates.
-  freqs = {'input': [1, 1, 1, 1, 1, 1, 1]}
+  freqs = {'input': [1]}
   coprocessor.SetUpdateFrequencies(freqs)
   return coprocessor
 
@@ -408,7 +408,7 @@ coprocessor = CreateCoProcessor()
 
 #--------------------------------------------------------------
 # Enable Live-Visualizaton with ParaView
-coprocessor.EnableLiveVisualization(False, 1)
+coprocessor.EnableLiveVisualization(True, 1)
 
 
 # ---------------------- Data Selection method ----------------------
