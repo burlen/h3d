@@ -1,6 +1,6 @@
 from paraview.simple import *
 from paraview import coprocessing
-
+import vtk
 
 #--------------------------------------------------------------
 # Code generated from cpstate.py to create the CoProcessor.
@@ -137,8 +137,6 @@ def CreateCoProcessor():
 
       h3d = calculator3
 
-
-
       # create a new 'Text'
       text2 = Text()
       text2.Text = 'den'
@@ -230,6 +228,7 @@ def CreateCoProcessor():
       h3dDisplay.Representation = 'Volume'
       h3dDisplay.ColorArrayName = ['POINTS', 'den']
       h3dDisplay.LookupTable = denLUT
+      h3dDisplay.ScalarOpacityFunction = denPWF
       h3dDisplay.ScalarOpacityUnitDistance = 1.7320508075688776
       h3dDisplay.Slice = 16
 
